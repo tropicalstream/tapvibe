@@ -40,7 +40,6 @@ auto-gain, asymmetric attack/decay, RMS, bass beat):
   audio session**, so it reacts cleanly to the exact track you're playing. (Session-0
   global-mix capture is silenced for third-party apps — that's why an earlier cut
   showed "no audio".)
-- **Live (mic):** `AudioRecord` from the microphone, reacts to any audible sound.
 
 ## Visualizers
 

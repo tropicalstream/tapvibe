@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Neon equalizer bars (pill-shaped via round stroke caps), cyan → magenta. -->
+    <path android:pathData="M29,54 L29,74" android:strokeColor="#22D3EE" android:strokeWidth="6" android:strokeLineCap="round" />
+    <path android:pathData="M39,42 L39,74" android:strokeColor="#38BDF8" android:strokeWidth="6" android:strokeLineCap="round" />
+    <path android:pathData="M49,60 L49,74" android:strokeColor="#818CF8" android:strokeWidth="6" android:strokeLineCap="round" />
+    <path android:pathData="M59,36 L59,74" android:strokeColor="#A78BFA" android:strokeWidth="6" android:strokeLineCap="round" />
+    <path android:pathData="M69,50 L69,74" android:strokeColor="#E879F9" android:strokeWidth="6" android:strokeLineCap="round" />
+    <path android:pathData="M79,44 L79,74" android:strokeColor="#F472B6" android:strokeWidth="6" android:strokeLineCap="round" />
+</vector>

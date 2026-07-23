@@ -22,14 +22,26 @@ TapInsight "encapsulation" bug). Supported: mp3, m4a/aac, flac, wav, ogg/opus.
 
 ## Menu & controls (right temple pad)
 
-| | Menu | Library | Visualizer |
-|---|---|---|---|
-| **Swipe ↑ / ↓** | Choose | Select track | — |
-| **Swipe ← / →** | — | — | Prev / next visualizer |
-| **Tap** | Enter | Play track | Play / pause |
-| **Double-tap** | — | Back to menu | Back |
+| | Menu | Library | IP Radio | Visualizer |
+|---|---|---|---|---|
+| **Swipe ↑ / ↓** | Choose | Select track | Browse | — |
+| **Swipe ← / →** | — | — | Cycle ranking | Prev / next visualizer |
+| **Tap** | Enter | Play track | Open / tune in | Play / pause |
+| **Hold** | — | — | ★ favorite | — |
+| **Double-tap** | — | Back to menu | Back | Back |
 
-Menu: **Zen Breathing · Music Library · Live Visualizer (mic)**.
+Menu: **Zen Breathing · Music Library · IP Radio · Live Visualizer (mic)**.
+
+## IP Radio
+
+A full browser over the [radio-browser.info](https://www.radio-browser.info/) community
+directory (~50k Icecast/SHOUTcast streams — the same catalogue VLC's Icecast discovery
+draws on): **Favorites · Trending · Top Voted · Most Played · Genres · Countries**. The
+station list pages in lazily as you scroll (the whole directory is reachable), swiping
+← / → re-ranks the current list live, and holding a station stars it into Favorites
+(persisted on-device). Tuning in streams the station through `MediaPlayer` exactly like
+an uploaded track — the visualizer attaches to that same audio session, so live radio
+drives the neon scenes identically to your own music.
 
 ## Audio → visuals
 
@@ -68,6 +80,9 @@ own session).
 
 `net/CompanionServer.kt` (NanoHTTPD :8080, drag-drop page, binary-preserving uploads)
 → `music/MusicLibrary.kt` (raw-byte storage) → `music/MusicPlayer.kt` (MediaPlayer,
-exposes session id) → `audio/AudioAnalyzer.kt` (Visualizer-on-session **or** mic) →
-`audio/Audio.kt` snapshot → `scenes/*` → `render/StageView.kt` (menu/library/visualizer)
-→ `MainActivity.kt` (Host). Reused: `ui/BinocularSbsLayout.kt`, `input/TrackpadGestureEngine.kt`.
+plays files or streams a URL, exposes session id) → `audio/AudioAnalyzer.kt`
+(Visualizer-on-session **or** mic) → `audio/Audio.kt` snapshot → `scenes/*` →
+`render/StageView.kt` (menu/library/radio/visualizer) → `MainActivity.kt` (Host).
+`radio/RadioStore.kt` (radio-browser.info client) + `radio/RadioBrowser.kt`
+(navigation state machine + async paging) power IP Radio. Reused:
+`ui/BinocularSbsLayout.kt`, `input/TrackpadGestureEngine.kt`.

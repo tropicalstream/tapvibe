@@ -32,7 +32,7 @@ class MainActivity : Activity(), StageView.Host {
     private lateinit var view: StageView
     private var server: CompanionServer? = null
 
-    private enum class AudioMode { NONE, MIC, MUSIC }
+    private enum class AudioMode { NONE, MIC, MUSIC, RADIO }
     private var audioMode = AudioMode.NONE
     private var trackIndex = 0
 
@@ -56,11 +56,15 @@ class MainActivity : Activity(), StageView.Host {
             addView(view)
         })
 
-        player.onSession = { id -> if (audioMode == AudioMode.MUSIC) analyzer.startSession(id) }
-        player.onCompletion = { autoNext() }
+        player.onSession = { id ->
+            if (audioMode == AudioMode.MUSIC || audioMode == AudioMode.RADIO) analyzer.startSession(id)
+        }
+        player.onCompletion = { if (audioMode == AudioMode.MUSIC) autoNext() }
+        player.onStateChange = { view.invalidate() }
 
         gestures.onTap = { view.onConfirm() }
         gestures.onDoubleTap = { view.onBack() }
+        gestures.onLongTap = { view.onLongPress() }
         gestures.onSwipeVertical = { dir -> view.onSelect(dir) }
         gestures.onSwipeHorizontal = { dir -> view.onCycle(dir) }
 
@@ -102,6 +106,13 @@ class MainActivity : Activity(), StageView.Host {
 
     override fun togglePlay() = player.toggle()
 
+    override fun radioPlay(url: String, name: String) {
+        audioMode = AudioMode.RADIO
+        player.playUrl(url, name)
+    }
+
+    override fun radioBuffering(): Boolean = player.buffering
+
     override fun startMic() {
         audioMode = AudioMode.MIC
         analyzer.startMic()
@@ -113,7 +124,10 @@ class MainActivity : Activity(), StageView.Host {
         player.stop()
     }
 
-    override fun nowPlaying(): String? = player.currentFile?.let { library.displayName(it) }
+    override fun nowPlaying(): String? = when (audioMode) {
+        AudioMode.RADIO -> player.streamTitle
+        else -> player.currentFile?.let { library.displayName(it) }
+    }
     override fun isPlaying(): Boolean = player.isPlaying
     override fun progress(): Float = player.progress()
 
@@ -155,7 +169,7 @@ class MainActivity : Activity(), StageView.Host {
     private fun rearmAudio() {
         when (audioMode) {
             AudioMode.MIC -> analyzer.startMic()
-            AudioMode.MUSIC -> if (player.sessionId != 0) analyzer.startSession(player.sessionId)
+            AudioMode.MUSIC, AudioMode.RADIO -> if (player.sessionId != 0) analyzer.startSession(player.sessionId)
             AudioMode.NONE -> {}
         }
     }
@@ -179,6 +193,7 @@ class MainActivity : Activity(), StageView.Host {
         gestures.release()
         analyzer.stop()
         player.stop()
+        view.releaseRadio()
         runCatching { server?.stop() }
     }
 
